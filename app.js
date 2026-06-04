@@ -6,12 +6,21 @@ const APP_CONFIG = {
   listName: "DescargasOperativas",
 };
 
-const defaultPilotos = ["Cristian", "Mario", "Luis", "Carlos"];
+const defaultPilotos = [
+  "Alexander Tojes",
+  "Cristian Gomez",
+  "Diego",
+  "Abner",
+  "Manuel Arias",
+  "Abimael Maldonado",
+];
 const defaultUnitsByPilot = {
-  Cristian: "TXT-19",
-  Mario: "TXT-20",
-  Luis: "TXT-21",
-  Carlos: "TXT-22",
+  "Alexander Tojes": "TXT-18",
+  "Cristian Gomez": "TXT-19",
+  Diego: "TXT-20",
+  Abner: "TXT-21",
+  "Manuel Arias": "TXT-22",
+  "Abimael Maldonado": "TXT-23",
 };
 const productAliases = {
   PREMIUM: "4 PREMIUM",
@@ -588,11 +597,13 @@ function refreshDropdowns() {
   fillSelect("#piloto", pilotos, "Seleccione piloto");
   fillSelect("#cargaPiloto", pilotos, "Seleccione piloto");
 
-  if (!cargaPilotoSelect.value && pilotos.length) {
-    cargaPilotoSelect.value = pilotos[0];
-  }
-  if (!pilotoSelect.value && pilotos.length) {
-    pilotoSelect.value = pilotos[0];
+  if (pilotos.length) {
+    if (!cargaPilotoSelect.value) {
+      cargaPilotoSelect.value = pilotos[0];
+    }
+    if (!pilotoSelect.value) {
+      pilotoSelect.value = pilotos[0];
+    }
   }
 
   updateDefaultUnit(cargaPilotoSelect, cargaUnidadInput);
@@ -645,7 +656,7 @@ function fillSelect(selector, values, placeholder) {
     option.textContent = value;
     select.appendChild(option);
   });
-  select.value = values.includes(current) ? current : "";
+  select.value = values.includes(current) ? current : (values[0] || "");
 }
 
 function updateDefaultUnit(pilotSelect, unitInput) {
