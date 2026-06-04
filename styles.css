@@ -216,6 +216,29 @@ textarea {
   gap: 10px;
 }
 
+.pilot-picker {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.pilot-chip {
+  border: 1px solid #cfd4dc;
+  background: #ffffff;
+  color: var(--dark);
+  border-radius: 8px;
+  padding: 12px 10px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+}
+
+.pilot-chip.selected {
+  border-color: var(--texpetrol-red);
+  background: rgba(192, 0, 0, 0.08);
+  color: var(--texpetrol-red);
+}
+
 .check-row {
   grid-template-columns: auto 1fr;
   align-items: center;

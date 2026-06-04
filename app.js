@@ -57,11 +57,13 @@ loginBanner.className = "helper-panel";
 loginBanner.innerHTML = '<p class="helper-title">Sesion</p><p id="loginStatus" class="helper-text">Sin iniciar sesion</p>';
 
 const cargaForm = document.querySelector("#cargaForm");
-const cargaPilotoSelect = document.querySelector("#cargaPiloto");
+const cargaPilotoHidden = document.querySelector("#cargaPiloto");
+const cargaPilotoPicker = document.querySelector("#cargaPilotoPicker");
 const cargaUnidadInput = document.querySelector("#cargaUnidad");
 const checklistForm = document.querySelector("#checklistForm");
 const despachoForm = document.querySelector("#despachoForm");
-const pilotoSelect = document.querySelector("#piloto");
+const pilotoHidden = document.querySelector("#piloto");
+const pilotoPicker = document.querySelector("#pilotoPicker");
 const unidadInput = document.querySelector("#unidad");
 const productoSelect = document.querySelector("#producto");
 const galonesCargadosInput = document.querySelector("#galonesCargados");
@@ -99,10 +101,8 @@ document.querySelectorAll("[data-screen]").forEach((button) => {
 });
 
 cargaForm.addEventListener("submit", saveCarga);
-cargaPilotoSelect.addEventListener("change", () => updateDefaultUnit(cargaPilotoSelect, cargaUnidadInput));
 checklistForm.addEventListener("submit", saveChecklist);
 despachoForm.addEventListener("submit", saveDespacho);
-pilotoSelect.addEventListener("change", loadActiveTripForDispatch);
 galonesCargadosInput.addEventListener("input", updateDifference);
 galonesRecibidosInput.addEventListener("input", updateDifference);
 filtroPiloto.addEventListener("change", renderHistory);
@@ -379,7 +379,7 @@ async function saveCarga(event) {
   const record = {
     FechaCarga: valueOf("#cargaFecha"),
     Estacion: valueOf("#cargaPlanta"),
-    Piloto: valueOf("#cargaPiloto"),
+    Piloto: cargaPilotoHidden.value,
     Unidad: valueOf("#cargaUnidad"),
     Producto: valueOf("#cargaProducto"),
     OdometroInicial: optionalNumberOf("#odometroInicial"),
@@ -418,7 +418,7 @@ async function saveDespacho(event) {
     HoraInicio: valueOf("#horaInicio"),
     HoraFin: valueOf("#horaFin"),
     Estacion: activeTrip?.Estacion || valueOf("#cargaPlanta") || "",
-    Piloto: valueOf("#piloto"),
+    Piloto: pilotoHidden.value,
     Unidad: valueOf("#unidad"),
     Producto: valueOf("#producto"),
     GalonesCargados: galonesCargados,
@@ -591,10 +591,10 @@ function refreshDropdowns() {
     ...state.TablaDescargas.map((row) => row.Piloto),
   ]);
 
-  populatePilotSelect(cargaPilotoSelect, pilotos);
-  populatePilotSelect(pilotoSelect, pilotos);
+  renderPilotPicker(cargaPilotoPicker, cargaPilotoHidden, pilotos, true);
+  renderPilotPicker(pilotoPicker, pilotoHidden, pilotos, true);
 
-  updateDefaultUnit(cargaPilotoSelect, cargaUnidadInput);
+  updateDefaultUnit(cargaPilotoHidden, cargaUnidadInput);
   loadActiveTripForDispatch();
 
   const activeTrips = state.ChecklistPreSalida.filter((row) => row.Estado !== "FINALIZADO");
@@ -647,21 +647,33 @@ function fillSelect(selector, values, placeholder) {
   select.value = values.includes(current) ? current : (values[0] || "");
 }
 
-function populatePilotSelect(select, pilots) {
-  const current = select.value;
-  select.innerHTML = '<option value="">Seleccione piloto</option>';
+function renderPilotPicker(container, hiddenInput, pilots, selectFirst = false) {
+  if (!container || !hiddenInput) return;
+  const current = hiddenInput.value || (selectFirst ? pilots[0] || "" : "");
+  hiddenInput.value = current;
+  container.innerHTML = "";
   pilots.forEach((pilot) => {
-    const option = document.createElement("option");
-    option.value = pilot;
-    option.textContent = pilot;
-    if (pilot === (current || pilots[0])) {
-      option.selected = true;
-    }
-    select.appendChild(option);
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `pilot-chip ${pilot === current ? "selected" : ""}`;
+    button.textContent = pilot;
+    button.addEventListener("click", () => {
+      hiddenInput.value = pilot;
+      container.querySelectorAll(".pilot-chip").forEach((chip) => chip.classList.remove("selected"));
+      button.classList.add("selected");
+      if (hiddenInput === cargaPilotoHidden) {
+        updateDefaultUnit(hiddenInput, cargaUnidadInput);
+      } else {
+        loadActiveTripForDispatch();
+      }
+    });
+    container.appendChild(button);
   });
-  if (!select.value && pilots.length) {
-    select.value = pilots[0];
+  if (!hiddenInput.value && pilots.length) {
+    hiddenInput.value = pilots[0];
   }
+  const activeButton = [...container.querySelectorAll(".pilot-chip")].find((chip) => chip.textContent === hiddenInput.value);
+  if (activeButton) activeButton.classList.add("selected");
 }
 
 function updateDefaultUnit(pilotSelect, unitInput) {
@@ -677,11 +689,11 @@ function updateDefaultUnit(pilotSelect, unitInput) {
 }
 
 function loadActiveTripForDispatch() {
-  const selectedPilot = pilotoSelect.value;
+  const selectedPilot = pilotoHidden.value;
   const activeTrip = getActiveTripForPilot(selectedPilot);
   if (!activeTrip) {
     activeDispatchTripId = null;
-    updateDefaultUnit(pilotoSelect, unidadInput);
+    updateDefaultUnit(pilotoHidden, unidadInput);
     productoSelect.value = "";
     galonesCargadosInput.value = "";
     updatePendingIndicator(0);
@@ -689,7 +701,7 @@ function loadActiveTripForDispatch() {
     return;
   }
   activeDispatchTripId = activeTrip.id;
-  unidadInput.value = activeTrip.Unidad || "";
+  unidadInput.value = activeTrip.Unidad || defaultUnitsByPilot[selectedPilot] || "";
   unidadInput.readOnly = Boolean(defaultUnitsByPilot[selectedPilot]);
   productoSelect.value = activeTrip.Producto || "";
   galonesCargadosInput.value = Number(activeTrip.GalonesRestantes || activeTrip.GalonesCargados || 0);
