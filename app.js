@@ -15,12 +15,8 @@ const defaultPilotos = [
   "Abimael Maldonado",
 ];
 const defaultUnitsByPilot = {
-  "Alexander Tojes": "TXT-18",
-  "Cristian Gomez": "TXT-19",
-  Diego: "TXT-20",
-  Abner: "TXT-21",
   "Manuel Arias": "TXT-22",
-  "Abimael Maldonado": "TXT-23",
+  "Abimael Maldonado": "TXT-17",
 };
 const productAliases = {
   PREMIUM: "4 PREMIUM",
@@ -662,7 +658,13 @@ function fillSelect(selector, values, placeholder) {
 function updateDefaultUnit(pilotSelect, unitInput) {
   const selectedPilot = pilotSelect.value;
   const defaultUnit = defaultUnitsByPilot[selectedPilot];
-  unitInput.value = defaultUnit || "";
+  if (defaultUnit) {
+    unitInput.value = defaultUnit;
+    unitInput.readOnly = true;
+  } else {
+    unitInput.value = "";
+    unitInput.readOnly = false;
+  }
 }
 
 function loadActiveTripForDispatch() {
@@ -679,6 +681,7 @@ function loadActiveTripForDispatch() {
   }
   activeDispatchTripId = activeTrip.id;
   unidadInput.value = activeTrip.Unidad || "";
+  unidadInput.readOnly = Boolean(defaultUnitsByPilot[selectedPilot]);
   productoSelect.value = activeTrip.Producto || "";
   galonesCargadosInput.value = Number(activeTrip.GalonesRestantes || activeTrip.GalonesCargados || 0);
   updatePendingIndicator(Number(activeTrip.GalonesRestantes || 0));
