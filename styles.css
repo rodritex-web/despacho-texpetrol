@@ -216,10 +216,23 @@ textarea {
   gap: 10px;
 }
 
+.picker-group {
+  display: grid;
+  gap: 8px;
+}
+
+.picker-label {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
 .pilot-picker {
   display: grid;
   gap: 10px;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  min-height: 52px;
 }
 
 .pilot-chip {
