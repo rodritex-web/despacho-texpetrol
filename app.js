@@ -587,6 +587,17 @@ function refreshDropdowns() {
   ]);
   fillSelect("#piloto", pilotos, "Seleccione piloto");
   fillSelect("#cargaPiloto", pilotos, "Seleccione piloto");
+
+  if (!cargaPilotoSelect.value && pilotos.length) {
+    cargaPilotoSelect.value = pilotos[0];
+  }
+  if (!pilotoSelect.value && pilotos.length) {
+    pilotoSelect.value = pilotos[0];
+  }
+
+  updateDefaultUnit(cargaPilotoSelect, cargaUnidadInput);
+  loadActiveTripForDispatch();
+
   const activeTrips = state.ChecklistPreSalida.filter((row) => row.Estado !== "FINALIZADO");
   const tripSelect = document.querySelector("#checklistViaje");
   tripSelect.innerHTML = '<option value="">Seleccione viaje</option>';
@@ -640,7 +651,7 @@ function fillSelect(selector, values, placeholder) {
 function updateDefaultUnit(pilotSelect, unitInput) {
   const selectedPilot = pilotSelect.value;
   const defaultUnit = defaultUnitsByPilot[selectedPilot];
-  if (defaultUnit) unitInput.value = defaultUnit;
+  unitInput.value = defaultUnit || "";
 }
 
 function loadActiveTripForDispatch() {
