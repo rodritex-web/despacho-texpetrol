@@ -57,13 +57,11 @@ loginBanner.className = "helper-panel";
 loginBanner.innerHTML = '<p class="helper-title">Sesion</p><p id="loginStatus" class="helper-text">Sin iniciar sesion</p>';
 
 const cargaForm = document.querySelector("#cargaForm");
-const cargaPilotoHidden = document.querySelector("#cargaPiloto");
-const cargaPilotoPicker = document.querySelector("#cargaPilotoPicker");
+const cargaPilotoSelect = document.querySelector("#cargaPiloto");
 const cargaUnidadInput = document.querySelector("#cargaUnidad");
 const checklistForm = document.querySelector("#checklistForm");
 const despachoForm = document.querySelector("#despachoForm");
-const pilotoHidden = document.querySelector("#piloto");
-const pilotoPicker = document.querySelector("#pilotoPicker");
+const pilotoSelect = document.querySelector("#piloto");
 const unidadInput = document.querySelector("#unidad");
 const productoSelect = document.querySelector("#producto");
 const galonesCargadosInput = document.querySelector("#galonesCargados");
@@ -101,8 +99,10 @@ document.querySelectorAll("[data-screen]").forEach((button) => {
 });
 
 cargaForm.addEventListener("submit", saveCarga);
+cargaPilotoSelect.addEventListener("change", () => updateDefaultUnit(cargaPilotoSelect, cargaUnidadInput));
 checklistForm.addEventListener("submit", saveChecklist);
 despachoForm.addEventListener("submit", saveDespacho);
+pilotoSelect.addEventListener("change", loadActiveTripForDispatch);
 galonesCargadosInput.addEventListener("input", updateDifference);
 galonesRecibidosInput.addEventListener("input", updateDifference);
 filtroPiloto.addEventListener("change", renderHistory);
@@ -591,10 +591,10 @@ function refreshDropdowns() {
     ...state.TablaDescargas.map((row) => row.Piloto),
   ]);
 
-  renderPilotPicker(cargaPilotoPicker, cargaPilotoHidden, pilotos, true);
-  renderPilotPicker(pilotoPicker, pilotoHidden, pilotos, true);
+  fillSelect("#cargaPiloto", pilotos, "Seleccione piloto");
+  fillSelect("#piloto", pilotos, "Seleccione piloto");
 
-  updateDefaultUnit(cargaPilotoHidden, cargaUnidadInput);
+  updateDefaultUnit(cargaPilotoSelect, cargaUnidadInput);
   loadActiveTripForDispatch();
 
   const activeTrips = state.ChecklistPreSalida.filter((row) => row.Estado !== "FINALIZADO");
@@ -647,36 +647,6 @@ function fillSelect(selector, values, placeholder) {
   select.value = values.includes(current) ? current : (values[0] || "");
 }
 
-function renderPilotPicker(container, hiddenInput, pilots, selectFirst = false) {
-  if (!container || !hiddenInput) return;
-  const current = hiddenInput.value || (selectFirst ? pilots[0] || "" : "");
-  hiddenInput.value = current;
-  container.innerHTML = "";
-  pilots.forEach((pilot) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = `pilot-chip ${pilot === current ? "selected" : ""}`;
-    button.textContent = pilot;
-    button.addEventListener("click", () => {
-      hiddenInput.value = pilot;
-      container.querySelectorAll(".pilot-chip").forEach((chip) => chip.classList.remove("selected"));
-      button.classList.add("selected");
-      if (hiddenInput === cargaPilotoHidden) {
-        updateDefaultUnit(hiddenInput, cargaUnidadInput);
-      } else {
-        loadActiveTripForDispatch();
-      }
-    });
-    container.appendChild(button);
-  });
-  if (!hiddenInput.value && pilots.length) {
-    hiddenInput.value = pilots[0];
-  }
-  container.classList.toggle("has-content", pilots.length > 0);
-  const activeButton = [...container.querySelectorAll(".pilot-chip")].find((chip) => chip.textContent === hiddenInput.value);
-  if (activeButton) activeButton.classList.add("selected");
-}
-
 function updateDefaultUnit(pilotSelect, unitInput) {
   const selectedPilot = pilotSelect.value;
   const defaultUnit = defaultUnitsByPilot[selectedPilot];
@@ -690,11 +660,11 @@ function updateDefaultUnit(pilotSelect, unitInput) {
 }
 
 function loadActiveTripForDispatch() {
-  const selectedPilot = pilotoHidden.value;
+  const selectedPilot = pilotoSelect.value;
   const activeTrip = getActiveTripForPilot(selectedPilot);
   if (!activeTrip) {
     activeDispatchTripId = null;
-    updateDefaultUnit(pilotoHidden, unidadInput);
+    updateDefaultUnit(pilotoSelect, unidadInput);
     productoSelect.value = "";
     galonesCargadosInput.value = "";
     updatePendingIndicator(0);
