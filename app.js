@@ -114,14 +114,22 @@ updateDifference();
 renderSharePointStatus();
 
 initMicrosoftAuth().catch((error) => {
-  notify(`No se pudo iniciar Microsoft 365: ${error.message}`);
+  console.warn("Microsoft 365 init failed:", error);
+  updateLoginStatus("Sesion Microsoft no disponible aun.");
 });
 
 async function initMicrosoftAuth() {
-  const msal = await ensureMsal();
   const config = getSharePointConfig();
   if (!config.clientId || !config.tenantId) {
     return;
+  }
+
+  let msal;
+  try {
+    msal = await ensureMsal();
+  } catch (error) {
+    updateLoginStatus("No se pudo cargar Microsoft 365.");
+    throw error;
   }
 
   APP_CONFIG.clientId = config.clientId;
@@ -148,6 +156,9 @@ async function initMicrosoftAuth() {
 async function ensureMsal() {
   if (window.msal) return window.msal;
   await injectScript("https://alcdn.msauth.net/browser/2.39.0/js/msal-browser.min.js");
+  if (!window.msal) {
+    throw new Error("msal-browser no quedo disponible despues de cargar el script.");
+  }
   return window.msal;
 }
 
