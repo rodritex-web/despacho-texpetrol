@@ -590,17 +590,9 @@ function refreshDropdowns() {
     ...state.ChecklistPreSalida.map((row) => row.Piloto),
     ...state.TablaDescargas.map((row) => row.Piloto),
   ]);
-  fillSelect("#piloto", pilotos, "Seleccione piloto");
-  fillSelect("#cargaPiloto", pilotos, "Seleccione piloto");
 
-  if (pilotos.length) {
-    if (!cargaPilotoSelect.value) {
-      cargaPilotoSelect.value = pilotos[0];
-    }
-    if (!pilotoSelect.value) {
-      pilotoSelect.value = pilotos[0];
-    }
-  }
+  populatePilotSelect(cargaPilotoSelect, pilotos);
+  populatePilotSelect(pilotoSelect, pilotos);
 
   updateDefaultUnit(cargaPilotoSelect, cargaUnidadInput);
   loadActiveTripForDispatch();
@@ -653,6 +645,23 @@ function fillSelect(selector, values, placeholder) {
     select.appendChild(option);
   });
   select.value = values.includes(current) ? current : (values[0] || "");
+}
+
+function populatePilotSelect(select, pilots) {
+  const current = select.value;
+  select.innerHTML = '<option value="">Seleccione piloto</option>';
+  pilots.forEach((pilot) => {
+    const option = document.createElement("option");
+    option.value = pilot;
+    option.textContent = pilot;
+    if (pilot === (current || pilots[0])) {
+      option.selected = true;
+    }
+    select.appendChild(option);
+  });
+  if (!select.value && pilots.length) {
+    select.value = pilots[0];
+  }
 }
 
 function updateDefaultUnit(pilotSelect, unitInput) {
