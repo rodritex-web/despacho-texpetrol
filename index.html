@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sistema de Despacho Texpetrol</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="app-header">
+        <div>
+          <p class="eyebrow">Texpetrol</p>
+          <h1 id="screenTitle">Sistema de Despacho</h1>
+        </div>
+      </header>
+
+      <main class="screen-wrap">
+        <section id="menuScreen" class="screen active" aria-labelledby="screenTitle">
+          <div class="menu-grid">
+            <button class="menu-button" type="button" data-screen="cargaScreen">
+              <span>Carga</span>
+            </button>
+            <button class="menu-button" type="button" data-screen="checklistScreen">
+              <span>Checklist Seguridad</span>
+            </button>
+            <button class="menu-button" type="button" data-screen="despachoScreen">
+              <span>Ingrese Despacho</span>
+            </button>
+            <button class="menu-button" type="button" data-screen="historialScreen">
+              <span>Ver Historial Despachos</span>
+            </button>
+            <button class="menu-button" type="button" data-screen="calificacionScreen">
+              <span>Calificar Despacho</span>
+            </button>
+            <button class="menu-button" type="button" data-screen="sharepointScreen">
+              <span>Configuracion SharePoint</span>
+            </button>
+          </div>
+        </section>
+
+        <section id="cargaScreen" class="screen" aria-labelledby="screenTitle">
+          <form id="cargaForm" class="form-card">
+            <label>
+              Fecha Carga
+              <input id="cargaFecha" type="date" required>
+            </label>
+            <label>
+              Planta
+              <select id="cargaPlanta" required>
+                <option value="">Seleccione planta</option>
+                <option value="Amatitlan">Amatitlan</option>
+                <option value="Michatoya">Michatoya</option>
+                <option value="Oakland">Oakland</option>
+              </select>
+            </label>
+            <label>
+              Piloto
+              <select id="cargaPiloto" required></select>
+            </label>
+            <label>
+              Unidad
+              <input id="cargaUnidad" type="text" placeholder="TXT-19" required>
+            </label>
+            <label>
+              Producto
+              <select id="cargaProducto" required>
+                <option value="">Seleccione producto</option>
+                <option value="1 DIESEL">1 DIESEL</option>
+                <option value="4 PLUS">4 PLUS</option>
+                <option value="DIESEL">DIESEL</option>
+                <option value="4 PREMIUM">4 PREMIUM</option>
+              </select>
+            </label>
+            <label>
+              Odometro Inicial
+              <input id="odometroInicial" type="number" inputmode="numeric" min="0" step="1" placeholder="0">
+            </label>
+            <label>
+              Galones Cargados
+              <input id="cargaGalones" type="number" inputmode="decimal" min="0" step="0.01" required>
+            </label>
+            <label>
+              Odometro Final
+              <input id="odometroFinal" type="number" inputmode="numeric" min="0" step="1" placeholder="0">
+            </label>
+            <button class="primary-button" type="submit">GUARDAR CARGA</button>
+          </form>
+          <button class="back-button" type="button" data-screen="menuScreen">VOLVER</button>
+        </section>
+
+        <section id="checklistScreen" class="screen" aria-labelledby="screenTitle">
+          <form id="checklistForm" class="form-card">
+            <label>
+              Viaje
+              <select id="checklistViaje" required></select>
+            </label>
+            <div class="checklist-group">
+              <label class="check-row"><input type="checkbox" required> Documentos completos</label>
+              <label class="check-row"><input type="checkbox" required> Extintor vigente</label>
+              <label class="check-row"><input type="checkbox" required> Válvulas y mangueras revisadas</label>
+              <label class="check-row"><input type="checkbox" required> EPP completo</label>
+              <label class="check-row"><input type="checkbox" required> Unidad sin fugas visibles</label>
+            </div>
+            <button class="primary-button" type="submit">CONFIRMAR CHECKLIST</button>
+          </form>
+          <button class="back-button" type="button" data-screen="menuScreen">VOLVER</button>
+        </section>
+
+        <section id="despachoScreen" class="screen" aria-labelledby="screenTitle">
+          <form id="despachoForm" class="form-card">
+            <label>
+              Cliente
+              <input id="cliente" type="text" placeholder="Cliente Progreso" required>
+            </label>
+            <label>
+              Piloto
+              <select id="piloto" required></select>
+            </label>
+            <output id="galonesPendientes" class="pending-output">GALONES PENDIENTES: 0</output>
+            <label>
+              Unidad
+              <input id="unidad" type="text" placeholder="TXT-19" required>
+            </label>
+            <label>
+              Producto
+              <select id="producto" required>
+                <option value="">Seleccione producto</option>
+                <option value="1 DIESEL">1 DIESEL</option>
+                <option value="4 PLUS">4 PLUS</option>
+                <option value="DIESEL">DIESEL</option>
+                <option value="4 PREMIUM">4 PREMIUM</option>
+              </select>
+            </label>
+            <label>
+              Fecha Descarga
+              <input id="fechaDescarga" type="date" required>
+            </label>
+            <div class="two-columns">
+              <label>
+                Hora Inicio
+                <input id="horaInicio" type="time" required>
+              </label>
+              <label>
+                Hora Fin
+                <input id="horaFin" type="time" required>
+              </label>
+            </div>
+            <div class="two-columns">
+              <label>
+                Galones Cargados
+                <input id="galonesCargados" type="number" inputmode="decimal" min="0" step="0.01" required>
+              </label>
+              <label>
+                Galones Entregados
+                <input id="galonesRecibidos" type="number" inputmode="decimal" min="0" step="0.01" required>
+              </label>
+            </div>
+            <output id="diferenciaPreview" class="difference-output">Diferencia: 0</output>
+            <label>
+              Comentario
+              <textarea id="comentarioDespacho" rows="3" placeholder="Ingrese comentario del despacho"></textarea>
+            </label>
+            <button class="primary-button" type="submit">GUARDAR DESPACHO</button>
+          </form>
+          <button class="back-button" type="button" data-screen="menuScreen">VOLVER</button>
+        </section>
+
+        <section id="historialScreen" class="screen" aria-labelledby="screenTitle">
+          <div class="filters">
+            <label>
+              Filtro Piloto
+              <select id="filtroPiloto"></select>
+            </label>
+            <label>
+              Filtro Fecha
+              <input id="filtroFecha" type="date">
+            </label>
+          </div>
+          <div id="historialList" class="history-list" aria-live="polite"></div>
+          <button class="back-button" type="button" data-screen="menuScreen">VOLVER</button>
+        </section>
+
+        <section id="calificacionScreen" class="screen" aria-labelledby="screenTitle">
+          <div class="filters">
+            <label>
+              Filtro Cliente
+              <select id="filtroClienteCalificacion"></select>
+            </label>
+            <label>
+              Filtro Fecha
+              <input id="filtroFechaCalificacion" type="date">
+            </label>
+          </div>
+          <div id="calificacionList" class="rating-list" aria-live="polite"></div>
+          <button class="back-button" type="button" data-screen="menuScreen">VOLVER</button>
+        </section>
+
+        <section id="sharepointScreen" class="screen" aria-labelledby="screenTitle">
+          <form id="sharepointForm" class="form-card">
+            <label>
+              Modo de almacenamiento
+              <select id="storageMode">
+                <option value="local">Local temporal</option>
+                <option value="sharepoint">SharePoint</option>
+              </select>
+            </label>
+            <label>
+              Site URL
+              <input id="sharepointSiteUrl" type="text" placeholder="https://tuempresa.sharepoint.com/sites/Texpetrol">
+            </label>
+            <label>
+              Tenant ID
+              <input id="sharepointTenantId" type="text" placeholder="00000000-0000-0000-0000-000000000000">
+            </label>
+            <label>
+              Client ID
+              <input id="sharepointClientId" type="text" placeholder="00000000-0000-0000-0000-000000000000">
+            </label>
+            <label>
+              Lista Descargas
+              <input id="sharepointDescargasList" type="text" value="TablaDescargas">
+            </label>
+            <label>
+              Lista Checklist
+              <input id="sharepointChecklistList" type="text" value="ChecklistPreSalida">
+            </label>
+            <label>
+              Lista Calificaciones
+              <input id="sharepointRatingsList" type="text" value="CalificacionesDespacho">
+            </label>
+            <div class="sp-actions">
+              <button class="primary-button" type="submit">GUARDAR CONFIGURACION</button>
+              <button class="secondary-button" id="spTestButton" type="button">PROBAR CONEXION</button>
+            </div>
+          </form>
+          <div class="helper-panel">
+            <p class="helper-title">Estado</p>
+            <p id="sharepointStatus" class="helper-text">Sin configurar</p>
+          </div>
+          <button class="back-button" type="button" data-screen="menuScreen">VOLVER</button>
+        </section>
+      </main>
+
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
