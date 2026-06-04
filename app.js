@@ -240,6 +240,38 @@ function renderSharePointStatus() {
   sharepointStatus.textContent = `Conectando con ${config.siteUrl} y la lista ${config.descargasList}.`;
 }
 
+function showScreen(screenId) {
+  screens.forEach((screen) => screen.classList.toggle("active", screen.id === screenId));
+  screenTitle.textContent = titles[screenId] || titles.menuScreen;
+
+  if (screenId === "historialScreen") renderHistory();
+  if (screenId === "calificacionScreen") renderRatings();
+  if (screenId === "checklistScreen") refreshDropdowns();
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+async function testSharePointConnection() {
+  const config = getSharePointConfig();
+  if (config.storageMode !== "sharepoint") {
+    notify("Activa el modo SharePoint para probar la conexion.");
+    return;
+  }
+
+  if (!config.siteUrl || !config.tenantId || !config.clientId) {
+    notify("Completa Site URL, Tenant ID y Client ID.");
+    return;
+  }
+
+  try {
+    await initMicrosoftAuth();
+    notify("SharePoint listo para conectar.");
+  } catch (error) {
+    console.error(error);
+    notify("No se pudo conectar con Microsoft 365.");
+  }
+}
+
 async function getGraphToken() {
   const account = window.msalInstance.getActiveAccount() || window.msalInstance.getAllAccounts()[0];
   if (!account) {
