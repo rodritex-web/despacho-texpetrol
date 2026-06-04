@@ -672,6 +672,7 @@ function renderPilotPicker(container, hiddenInput, pilots, selectFirst = false) 
   if (!hiddenInput.value && pilots.length) {
     hiddenInput.value = pilots[0];
   }
+  container.classList.toggle("has-content", pilots.length > 0);
   const activeButton = [...container.querySelectorAll(".pilot-chip")].find((chip) => chip.textContent === hiddenInput.value);
   if (activeButton) activeButton.classList.add("selected");
 }

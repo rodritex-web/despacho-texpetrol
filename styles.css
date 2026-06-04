@@ -235,6 +235,14 @@ textarea {
   min-height: 52px;
 }
 
+.fallback-picker {
+  margin-top: 10px;
+}
+
+.pilot-picker.has-content + .fallback-picker {
+  display: none;
+}
+
 .pilot-chip {
   border: 1px solid #cfd4dc;
   background: #ffffff;
