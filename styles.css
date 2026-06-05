@@ -25,7 +25,7 @@ body {
 }
 
 
-body ::before{
+/*body ::before{
 
 content: "";
 position: fixed;
@@ -41,7 +41,8 @@ inset: 0;
   pointer-events: none;
   z-index: -1;
 
-}
+}**/
+
 button,
 input,
 select,
@@ -55,15 +56,22 @@ textarea {
   flex-direction: column;
 }
 
+
 .app-header {
   background: var(--texpetrol-red);
   color: #ffffff;
   padding: clamp(18px, 5vw, 30px);
 
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  text-align: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.header-logo{
+
+
 }
 
 .app-header h1 {
