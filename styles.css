@@ -28,7 +28,7 @@ body::before {
   position: fixed;
   inset: 0;
 
-  background-image: url("./img/LOGO.jpg");
+  background-image: url("./LOGO.jpg");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 55%;
