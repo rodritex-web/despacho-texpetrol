@@ -34,9 +34,9 @@ body::before {
   background-image: url("./LOGO.jpg");
   background-repeat: no-repeat;
   background-position: center center;
-  background-size: 55%;
+  background-size: 65%;
 
-  opacity: 0.15;
+  opacity: 0.39;
 
   pointer-events: none;
   z-index: -1;
