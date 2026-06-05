@@ -117,7 +117,7 @@ function setToday() {
 
   const cargaFecha = document.getElementById("cargaFecha");
   const fechaDescarga = document.getElementById("fechaDescarga");
-s
+
   if (cargaFecha) cargaFecha.value = today;
   if (fechaDescarga) fechaDescarga.value = today;
 }
