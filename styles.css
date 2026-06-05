@@ -25,21 +25,14 @@ body {
 }
 
 
-body::before {
-  content: "";
-  position: relative;
-  inset: 0;
-  background: #f5f5f5;
+body {
 
+background-color: #f5f5f5;
   background-image: url("./LOGO.jpg");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 65%;
 
-  opacity: 0.39;
-
-  pointer-events: none;
-  z-index: -1;
 }
 button,
 input,
