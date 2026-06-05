@@ -112,6 +112,16 @@ filtroFechaCalificacion.addEventListener("change", renderRatings);
 sharepointForm.addEventListener("submit", saveSharePointConfig);
 spTestButton.addEventListener("click", testSharePointConnection);
 
+function setToday() {
+  const today = new Date().toISOString().split("T")[0];
+
+  const cargaFecha = document.getElementById("cargaFecha");
+  const fechaDescarga = document.getElementById("fechaDescarga");
+s
+  if (cargaFecha) cargaFecha.value = today;
+  if (fechaDescarga) fechaDescarga.value = today;
+}
+
 setToday();
 refreshDropdowns();
 renderHistory();
@@ -342,11 +352,15 @@ async function loadAllData() {
   }
 
   const payload = await response.json();
-  state.TablaDescargas = (payload.value || []).map((item) => mapSharePointDownload(item));
-  state.ChecklistPreSalida = [];
-  state.checklistConfirmado = [];
-  normalizeLoadedState({ TablaDescargas: state.TablaDescargas, ChecklistPreSalida: state.ChecklistPreSalida });
-  renderHistory();
+ state.TablaDescargas = (payload.value || []).map((item) => mapSharePointDownload(item));
+state.ChecklistPreSalida = [];
+state.checklistConfirmado = [];
+
+renderHistory();
+renderRatings();
+refreshFilterOptions();
+refreshRatingFilterOptions();
+refreshDropdowns();
   renderRatings();
   refreshFilterOptions();
   refreshRatingFilterOptions();
@@ -379,7 +393,7 @@ async function saveCarga(event) {
   const record = {
     FechaCarga: valueOf("#cargaFecha"),
     Estacion: valueOf("#cargaPlanta"),
-    Piloto: cargaPilotoHidden.value,
+    Piloto: cargaPilotoSelect.value,
     Unidad: valueOf("#cargaUnidad"),
     Producto: valueOf("#cargaProducto"),
     OdometroInicial: optionalNumberOf("#odometroInicial"),
@@ -413,12 +427,13 @@ async function saveDespacho(event) {
   const galonesRecibidos = numberOf("#galonesRecibidos");
   const diferencia = Math.max(galonesCargados - galonesRecibidos, 0);
   const config = getSharePointConfig();
-  const item = {
+const item = {
+    Cliente: valueOf("#cliente"),
     FechaDescarga: valueOf("#fechaDescarga"),
     HoraInicio: valueOf("#horaInicio"),
     HoraFin: valueOf("#horaFin"),
     Estacion: activeTrip?.Estacion || valueOf("#cargaPlanta") || "",
-    Piloto: pilotoHidden.value,
+    Piloto: pilotoSelect.value,
     Unidad: valueOf("#unidad"),
     Producto: valueOf("#producto"),
     GalonesCargados: galonesCargados,
@@ -754,6 +769,10 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function normalizeLoadedState() {
+  return true;
 }
 
 function notify(message) {
