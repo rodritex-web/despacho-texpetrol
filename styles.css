@@ -122,7 +122,7 @@ textarea {
 .back-button {
   width: 100%;
   border: 0;
-  border-radius: 16px;
+  border-radius: 10px;
   color: #ffffff;
   font-weight: 700;
   min-height: 90px;
@@ -399,4 +399,23 @@ textarea {
   .rating-actions {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+@media (max-width: 768px) {
+
+    .app-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .header-logo {
+        height: 60px;
+        width: auto;
+    }
+
+    .menu-grid {
+        grid-template-columns: 1fr;
+    }
+
 }
