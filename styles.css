@@ -122,11 +122,11 @@ textarea {
 .back-button {
   width: 100%;
   border: 0;
-  border-radius: 10px;
+  border-radius: 12px;
   color: #ffffff;
   font-weight: 700;
-  min-height: 60px;
-  font-size: 1.2rem;
+  min-height: 55px;
+  font-size: 1.1rem;
   padding: 13px 16px;
   cursor: pointer;
 }
